@@ -24,6 +24,7 @@ export const ExportImport = (props: any) => {
     if (files !== null) {
       props?.uploadTasks(JSON.parse(files))
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files])
 
   const downloadFile = () => {

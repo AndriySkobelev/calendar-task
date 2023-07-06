@@ -71,7 +71,6 @@ export const DroppableCardWrapper = React.memo((props: any) => {
     </Box>
   )
 })
-let s = 0;
 
 export const CardDayComponent = ({
   id,

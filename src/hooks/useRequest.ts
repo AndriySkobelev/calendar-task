@@ -16,9 +16,10 @@ export const requestFunc = async ({
       data,
       method,
     }).then((resolve) => {
-      resData = resolve?.data;
+      resData = resolve;
       return;
     });
+    console.log('res', res)
     return resData;
   } catch(e){
     console.error(e)

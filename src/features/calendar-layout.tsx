@@ -29,6 +29,7 @@ const fetchData = async () => {
 };
 
 /// HELPERS ///
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function removeElementFromArray(array: Array<any>, element: any) {
   const index = array.indexOf(element);
   if (index !== -1) {
