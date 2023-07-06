@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/modifiers": "^6.0.1",
+    "@dnd-kit/sortable": "^7.0.2",
+    "@stitches/react": "^1.2.8",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -10,10 +14,19 @@
     "@types/node": "^16.18.38",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "@types/styled-components": "^5.1.26",
+    "axios": "^1.4.0",
+    "html2canvas": "^1.4.1",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "react-uuid": "^2.0.0",
+    "stitches-normalize-css": "^1.2.0",
+    "styled-components": "^6.0.2",
+    "styled-system": "^5.1.5",
     "typescript": "^4.9.5",
+    "unique-id-generator": "^1.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -39,5 +52,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/styled-system": "^5.1.16"
   }
 }
