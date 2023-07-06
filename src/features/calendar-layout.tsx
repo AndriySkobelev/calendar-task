@@ -95,6 +95,9 @@ const changeMonthReducer = (state: any, action: any) => {
     },
     'ADD_CARD': () => {
       const id = uuid();
+      if (action?.callBack) {
+        action?.callBack();
+      }
       return {
         ...state,
         tasks: {
@@ -105,6 +108,9 @@ const changeMonthReducer = (state: any, action: any) => {
     },
     'EDIT_CARD': () => {
       const id = action?.data?.id;
+      if (action?.callBack) {
+        action?.callBack();
+      }
       return {
         ...state,
         tasks: {
@@ -172,7 +178,8 @@ const CalendarLayout = () => {
     setModalData({
       component: <CreateCardComponent ref={createRef} onSubmit={(data) => dispatch({
         data: { ...data, ...dayData},
-        type: 'ADD_CARD'
+        type: 'ADD_CARD',
+        callBack: () => setOpen(false)
       })} />,
     })
 
@@ -187,16 +194,13 @@ const CalendarLayout = () => {
         initialData={initialData}
         onSubmit={(data) => dispatch({
           data,
-          type: 'EDIT_CARD'
+          type: 'EDIT_CARD',
+          callBack: () => setOpen(false)
         })} />,
     })
-
-
   }
 
   const handleDeleteCard = (data: any) => {
-    console.log('handleDeleteCard-data: ', data);
-
     dispatch({
       data,
       type: 'DELETE_CARD'

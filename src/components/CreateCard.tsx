@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // ui
 import { Box } from '../ui';
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,10 +51,12 @@ const ColorVariants = ({
 
 export const CreateCardComponent = ({ ref, onSubmit, initialData }:{ ref: any, initialData?: any, onSubmit: (data: any) => void }) => {
   const [data, setData] = useState(initialData || {
-    text: '',
+    text: null,
     selectedColors: []
   });
   
+  const [error, setError]: any = useState(null);
+
   const handleChooseColor = (value: any) => {
     const selectedColors: any = data?.selectedColors;
 
@@ -65,6 +67,10 @@ export const CreateCardComponent = ({ ref, onSubmit, initialData }:{ ref: any, i
       return { ...prevData, selectedColors: [...prevData.selectedColors, value] }
     })
   }
+
+  useEffect(() => {
+    return () => setError('')
+  }, [])
   
   return (
     <Box
@@ -83,8 +89,16 @@ export const CreateCardComponent = ({ ref, onSubmit, initialData }:{ ref: any, i
         handleChoose={handleChooseColor}
         selectedColors={data?.selectedColors} />
       </Box>
+      {
+        error
+        ? <Box color='red'>{error}</Box>
+        : null
+      }
       <Box margin='auto 0 0 0'>
-        <input type='button' value='Submit' onClick={() => onSubmit(data)}/>
+        <input type='button' value='Submit' onClick={() => {
+          if (data?.text && data?.selectedColors.length > 0) return onSubmit(data);
+          return setError('Please fill label and choose color')
+        }}/>
       </Box>
     </Box>
   );

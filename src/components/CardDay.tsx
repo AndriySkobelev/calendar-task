@@ -105,7 +105,6 @@ export const CardDayComponent = ({
         borderRadius='4px'
         flexDirection='column'
         onClick={handleAddCard}
-        onPointerDown={() => {console.log('IN-HERE')}}
         opacity={isCurrentMonthDay ? '1' : '0.5'}
       >
         <Box
@@ -116,7 +115,6 @@ export const CardDayComponent = ({
         >
           {data.dayNum}
         </Box>
-          {/* {console.log('dayTasks', dayTasks)} */}
           {
             dayTasks
             ? dayTasks.map((task: any, i: number) => (

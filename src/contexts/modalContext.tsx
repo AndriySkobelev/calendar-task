@@ -11,7 +11,9 @@ export const ModalProvider = ({ children }:{ children: React.ReactNode }) => {
     component: null,
     actions: null
   });
-  const valueProvider: { setOpen: () => void, setModalData: () => void} | any = {
+  const valueProvider: {
+    setOpen: () => void,
+    setModalData: () => void} | any = {
     setOpen,
     setModalData
   };
