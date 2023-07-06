@@ -46,8 +46,8 @@ const TaskComponent = ({ task, onDelete, onEdit }:{ task: any, onDelete?: (e: an
           <Box fontSize='12px' textAlign='start'>{task.text}</Box>
         </Box>
         <Box display='flex' gridGap='4px'>
-          <Box onClick={onEdit}>E</Box>
-          <Box onClick={onDelete}>D</Box>
+          <Box width='10px' height='10px' onPointerDown={onEdit}>E</Box>
+          <Box width='10px' height='10px' onPointerDown={onDelete}>D</Box>
         </Box>
       </Box>
   )
@@ -106,6 +106,7 @@ export const CardDayComponent = ({
         borderRadius='4px'
         flexDirection='column'
         onClick={handleAddCard}
+        onPointerDown={() => {console.log('IN-HERE')}}
         opacity={isCurrentMonthDay ? '1' : '0.5'}
       >
         <Box
@@ -116,18 +117,19 @@ export const CardDayComponent = ({
         >
           {data.dayNum}
         </Box>
+          {/* {console.log('dayTasks', dayTasks)} */}
           {
             dayTasks
-            ? dayTasks.map((el: any, i: number) => (
+            ? dayTasks.map((task: any, i: number) => (
               <Box>
-                <DragTask key={i+1} id={el.id}>
+                <DragTask key={i+1} id={task.id}>
                   <TaskComponent
                     key={i}
-                    task={el}
-                    // onEdit={() => handleEditCard(el)}
+                    task={task}
+                    onEdit={() => handleEditCard(task)}
                     onDelete={(e: any) => {
-                      e.stopPropagation();
-                      handleDeleteCard(el);
+                      // e.stopPropagation();
+                      handleDeleteCard(task);
                       return;
                     }}
                     />

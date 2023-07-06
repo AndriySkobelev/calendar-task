@@ -20,10 +20,11 @@ export const CountryMenu = ({ countries }:{ countries: Array<{ countryCode: stri
         show
           ? (
             <Box
-              margin='10px 0 0 0'
+              zIndex='1'
               bg='white'
               overflow='auto'
               maxHeight='200px'
+              margin='10px 0 0 0'
               position='absolute'
               borderRadius='10px'
               border='1px solid green'

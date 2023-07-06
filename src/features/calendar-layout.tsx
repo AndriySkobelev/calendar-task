@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useReducer, useContext, useRef, useMemo } from 'react';
 import moment from 'moment';
-import html2canvas from 'html2canvas';
 import {DndContext} from '@dnd-kit/core';
 import uuid from 'react-uuid';
 import { Box } from '../ui';
@@ -8,28 +7,17 @@ import { Box } from '../ui';
 import {
   DayNames,
   DayNumbers,
-  ExportImport,
   GridWrapper
 } from '../components/default-components';
-import CardDayComponent, { DragTask, DroppableCardWrapper } from '../components/CardDay';
+import { CreateCardComponent } from '../components/CreateCard';
+import ExportImport from '../components/ExportImportComp';
+import CardDayComponent from '../components/CardDay';
 import CountryMenu from '../components/contryMenu';
 import PrevNextComponent from '../components/prevNextComp';
-
 // hooks
 import { requestFunc } from '../hooks/useRequest';
 import { ModalContext } from '../contexts/modalContext';
-import { CreateCardComponent } from '../components/CreateCard';
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-function removeElementFromArray(array: Array<any>, element: any) {
-  const index = array.indexOf(element);
-  if (index !== -1) {
-    array.splice(index, 1);
-  }
-  return array;
-}
 
 const NAGER_DATE_API = 'https://date.nager.at/api/v3';
 const fetchData = async () => {
@@ -39,6 +27,27 @@ const fetchData = async () => {
   })
   return some;
 };
+
+/// HELPERS ///
+function removeElementFromArray(array: Array<any>, element: any) {
+  const index = array.indexOf(element);
+  if (index !== -1) {
+    array.splice(index, 1);
+  }
+  return array;
+}
+
+const groupedData = (list: Array<any>, groupProp: string) => {
+  const someObj: any = {};
+  list.forEach((el) => {
+    const keyObj: any = el[groupProp];
+    if (Object.hasOwn(someObj, keyObj)) {
+      return someObj[keyObj] = [...someObj[keyObj], el];
+    }
+    return someObj[keyObj] = [el];
+  });
+  return someObj;
+}
 
 const generateListDate = (date: any) => {
   let list = [];
@@ -56,6 +65,7 @@ const generateListDate = (date: any) => {
   }
   return list;
 }
+/// HELPERS ///
 
 const useGenerateDateList = (date?: string) => {
   const startDateMonth = moment(date, 'x').startOf('M');
@@ -123,18 +133,6 @@ const changeMonthReducer = (state: any, action: any) => {
   return actionsObj[action.type]();
 };
 
-const groupedData = (list: Array<any>, groupProp: string) => {
-  const someObj: any = {};
-  list.forEach((el) => {
-    const keyObj: any = el[groupProp];
-    if (Object.hasOwn(someObj, keyObj)) {
-      return someObj[keyObj] = [...someObj[keyObj], el];
-    }
-    return someObj[keyObj] = [el];
-  });
-  return someObj;
-}
-
 const CalendarLayout = () => {
   const [countriesData, setCountries] = useState([]);
   const [activeId, setActiveId] = useState(null);
@@ -148,14 +146,6 @@ const CalendarLayout = () => {
 
   const datesList = useGenerateDateList(state?.date);
 
-  const downloadCalendarImage = () => {
-    html2canvas(calendarRef.current).then((canvas) => {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL();
-      link.download = 'calendar.png';
-      link.click();
-    });
-  };
 
   const handleUploadTask = (data: any) => {
     dispatch({
@@ -188,11 +178,19 @@ const CalendarLayout = () => {
     return;
   }
 
-  const handleEditCard = (data: any) => {
-    dispatch({
-      data,
-      type: 'EDIT_CARD'
+  const handleEditCard = (initialData: any) => {
+    setOpen(true)
+    setModalData({
+      component: <CreateCardComponent
+        ref={createRef}
+        initialData={initialData}
+        onSubmit={(data) => dispatch({
+          data,
+          type: 'EDIT_CARD'
+        })} />,
     })
+
+
   }
 
   const handleDeleteCard = (data: any) => {
@@ -214,11 +212,16 @@ const CalendarLayout = () => {
   const groupedTasks = useMemo(() => groupedData(Object.values(state?.tasks), 'date'), [state]);
   return (
     <Box padding='20px' ref={calendarRef}>
-      <ExportImport downloadData={state?.tasks} uploadTasks={handleUploadTask} />
-      <Box onClick={downloadCalendarImage}>Download Calendar</Box>
+
       <CountryMenu countries={countriesData}/>
-      <PrevNextComponent handleNext={handleNextMonth} handlePrev={handlePrevMonth}/>
-      <Box>{moment(state?.date).format('MMMM YYYY')}</Box>
+      <Box margin='0 0 30px 0' display='flex' justifyContent='space-between'>
+        <PrevNextComponent handleNext={handleNextMonth} handlePrev={handlePrevMonth}/>
+        <Box>{moment(state?.date).format('MMMM YYYY')}</Box>
+        <ExportImport
+        calendarRef={calendarRef}
+        downloadData={state?.tasks}
+        uploadTasks={handleUploadTask} />
+      </Box>
       <DayNames/>
       <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <GridWrapper>
@@ -233,8 +236,8 @@ const CalendarLayout = () => {
                 tasksData={state?.tasks}
                 dayTasks={groupedTasks[el?.date]}
                 handleAddCard={() => handleAddCard(el)}
-                handleEditCard={() => handleEditCard(el)}
-                handleDeleteCard={() => handleDeleteCard(el)}
+                handleEditCard={handleEditCard}
+                handleDeleteCard={handleDeleteCard}
                 isCurrentMonthDay={el.monthNum === moment(state?.date).month()} />
               );
             })

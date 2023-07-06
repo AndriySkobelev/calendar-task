@@ -49,8 +49,8 @@ const ColorVariants = ({
   )
 }
 
-export const CreateCardComponent = ({ ref, onSubmit }:{ ref: any, onSubmit: (data: any) => void }) => {
-  const [data, setData] = useState({
+export const CreateCardComponent = ({ ref, onSubmit, initialData }:{ ref: any, initialData?: any, onSubmit: (data: any) => void }) => {
+  const [data, setData] = useState(initialData || {
     text: '',
     selectedColors: []
   });
