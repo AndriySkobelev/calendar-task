@@ -21,11 +21,11 @@ import { ModalContext } from '../contexts/modalContext';
 
 const NAGER_DATE_API = 'https://date.nager.at/api/v3';
 const fetchData = async () => {
-  const some = await requestFunc({
+  const res: any = await requestFunc({
     method: 'GET',
     url: `${NAGER_DATE_API}/AvailableCountries`,
   })
-  return some;
+  return res?.data;
 };
 
 /// HELPERS ///
@@ -213,7 +213,6 @@ const CalendarLayout = () => {
   const groupedTasks = useMemo(() => groupedData(Object.values(state?.tasks), 'date'), [state]);
   return (
     <Box padding='20px' ref={calendarRef}>
-
       <CountryMenu countries={countriesData}/>
       <Box margin='0 0 30px 0' display='flex' justifyContent='space-between'>
         <PrevNextComponent handleNext={handleNextMonth} handlePrev={handlePrevMonth}/>
